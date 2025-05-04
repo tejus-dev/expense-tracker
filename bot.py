@@ -15,7 +15,9 @@ logging.basicConfig(level=logging.INFO)
 
 # Setup Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = Credentials.from_service_account_file(os.path.join(os.path.dirname(__file__), "creds.json"), scopes=scope)
+creds = Credentials.from_service_account_file(
+    "/Users/tejusm/Desktop/expense_bot_live/expense-tracker/creds.json", scopes=scope
+)
 client = gspread.authorize(creds)
 sheet = client.open("Expenses").sheet1
 
