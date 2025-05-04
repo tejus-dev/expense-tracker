@@ -4,7 +4,7 @@ from telegram.ext import (
     ApplicationBuilder, ContextTypes, MessageHandler, CallbackQueryHandler, filters
 )
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 from datetime import datetime
 import re
 
@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Setup Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
+creds = Credentials.from_service_account_file("creds.json", scopes=scope)  # Updated to use google-auth
 client = gspread.authorize(creds)
 sheet = client.open("Expenses").sheet1
 
@@ -65,7 +65,7 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text("No expense found to categorize.")
 
 # Bot token
-TOKEN = "8195564301:AAFT-5h5yRHbw9B1DhHqKLcFjhE9WZeK4EU"
+TOKEN = "YOUR_BOT_TOKEN"  # Make sure to replace this with your bot token
 
 # Run the bot
 app = ApplicationBuilder().token(TOKEN).build()
