@@ -7,13 +7,15 @@ import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 import re
+import os
+
 
 # Logging
 logging.basicConfig(level=logging.INFO)
 
 # Setup Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = Credentials.from_service_account_file("creds.json", scopes=scope)  # Updated to use google-auth
+creds = Credentials.from_service_account_file(os.path.join(os.path.dirname(__file__), "creds.json"), scopes=scope)
 client = gspread.authorize(creds)
 sheet = client.open("Expenses").sheet1
 
