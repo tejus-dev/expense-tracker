@@ -8,17 +8,19 @@ from google.oauth2.service_account import Credentials
 from datetime import datetime
 import re
 import os
-
-
+import json
 
 # Logging
 logging.basicConfig(level=logging.INFO)
 
-# Setup Google Sheets
+# Setup Google Sheets using JSON string from env
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds_path = os.getenv("GOOGLE_CREDS_PATH", "creds.json")  # fallback if not set
-creds = Credentials.from_service_account_file(creds_path, scopes=scope)
+creds_json = os.environ.get("GOOGLE_CREDS_JSON")
+if not creds_json:
+    raise Exception("GOOGLE_CREDS_JSON environment variable not set.")
 
+creds_dict = json.loads(creds_json)
+creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
 
 client = gspread.authorize(creds)
 sheet = client.open("Expenses").sheet1
@@ -71,7 +73,9 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text("No expense found to categorize.")
 
 # Bot token
-TOKEN = "8195564301:AAFT-5h5yRHbw9B1DhHqKLcFjhE9WZeK4EU"  # Make sure to replace this with your bot token
+TOKEN = os.getenv("BOT_TOKEN")
+if not TOKEN:
+    raise Exception("BOT_TOKEN environment variable not set.")
 
 # Run the bot
 app = ApplicationBuilder().token(TOKEN).build()
