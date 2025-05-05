@@ -10,14 +10,16 @@ import re
 import os
 
 
+
 # Logging
 logging.basicConfig(level=logging.INFO)
 
 # Setup Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = Credentials.from_service_account_file(
-    "/Users/tejusm/Desktop/expense_bot_live/expense-tracker/creds.json", scopes=scope
-)
+creds_path = os.getenv("GOOGLE_CREDS_PATH", "creds.json")  # fallback if not set
+creds = Credentials.from_service_account_file(creds_path, scopes=scope)
+
+
 client = gspread.authorize(creds)
 sheet = client.open("Expenses").sheet1
 
@@ -69,7 +71,7 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text("No expense found to categorize.")
 
 # Bot token
-TOKEN = "YOUR_BOT_TOKEN"  # Make sure to replace this with your bot token
+TOKEN = "8195564301:AAFT-5h5yRHbw9B1DhHqKLcFjhE9WZeK4EU"  # Make sure to replace this with your bot token
 
 # Run the bot
 app = ApplicationBuilder().token(TOKEN).build()
